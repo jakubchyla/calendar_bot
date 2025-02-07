@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.12-alpine
 
 RUN mkdir -p /opt/bot && chmod 755 /opt && chmod 755 /opt/bot
 WORKDIR /opt/bot
@@ -15,5 +15,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # copy application
 COPY src/ /opt/bot/src
 
-ENTRYPOINT [ "/bot/entrypoint.sh" ]
+COPY --chmod= entrypoint.sh /opt/bot/entrypoint.sh
+
+# switch to non root user
+RUN addgroup asdf && adduser -G asdf -D -H asdf
+USER asdf
+
+ENTRYPOINT [ "/opt/bot/entrypoint.sh" ]
 

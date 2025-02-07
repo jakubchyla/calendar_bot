@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-. "/opt/bot/bin/activate"
+. "/opt/bot/venv/bin/activate"
 
 if [ -z "$TOKEN" ]; then
     printf "%s\n" "TOKEN env is not defined" \

@@ -1,6 +1,2 @@
 py-cord
-PyNaCl
-aiodns
-brotlipy
-msgspec
 python-dateutil
