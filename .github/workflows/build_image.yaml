@@ -1,0 +1,21 @@
+name: Calendar Bot image build and upload
+
+on:
+    push:
+        branches: ["master"]
+        paths-ignore:
+            - '.github/**'
+            - 'README.md'
+    schedule:
+        - cron: '37 21 * * 5'
+    workflow_dispatch:
+
+jobs:
+    push:
+        uses: ./.github/workflows/docker_publish_image.yml
+        with:
+            build_path: .
+            image_name: calendar_bot
+        secrets:
+            dockerhub_user: ${{secrets.dockerhub_user}}
+            dockerhub_access_token: ${{secrets.dockerhub_access_token}}

@@ -1,0 +1,37 @@
+name: Build and push image to Dockerhub template
+on:
+    workflow_call:
+        inputs:
+            build_path:
+                description: "Path to build folder"
+                required: true
+                type: string
+            image_name:
+                description: "Image name"
+                required: true
+                type: string
+        secrets:
+            dockerhub_user:
+                description: "Dockerhub username"
+                required: true
+            dockerhub_access_token:
+                description: "upload token for Dockerhub"
+                required: true
+
+
+jobs:
+    upload_to_dockerhub:
+        name: Build and push image to Dockerhub
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Get current date
+              run: echo "BUILD_DATE=$(date "+%F")" >> $GITHUB_ENV
+            - name: Log in to Dockerhub
+              run: docker login --username ${{secrets.dockerhub_user}} --password ${{secrets.dockerhub_access_token}}
+            - name: Build image
+              run: docker build --tag ${{secrets.dockerhub_user}}/${{inputs.image_name}}:$BUILD_DATE --tag ${{secrets.dockerhub_user}}/${{inputs.image_name}}:latest ${{inputs.build_path}}
+            - name: Push image
+              run: | 
+                docker push ${{secrets.dockerhub_user}}/${{inputs.image_name}}:latest
+                docker push ${{secrets.dockerhub_user}}/${{inputs.image_name}}:$BUILD_DATE
